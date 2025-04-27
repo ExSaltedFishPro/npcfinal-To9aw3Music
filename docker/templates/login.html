@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>丰川音乐</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .auth-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+        .auth-container h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .auth-container p {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        .auth-container .input-field {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .auth-container .button {
+            width: 100%;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .auth-container .button:hover {
+            background-color: #555;
+        }
+        .toggle-btn {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .toggle-btn a {
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .toggle-btn a:hover {
+            color: #555;
+        }
+        .twofa-field {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="auth-container">
+    <h2 id="auth-title">登录</h2>
+    
+    <form id="auth-form">
+        <!-- 登录/注册输入框 -->
+        <label for="username">用户名:</label>
+        <input type="text" id="username" class="input-field" placeholder="账户" required>
+
+        <label for="password">密码:</label>
+        <input type="password" id="password" class="input-field" placeholder="密码" required>
+
+        <button type="submit" class="button" id="submit-btn">登录</button>
+    </form>
+
+    <div class="toggle-btn">
+        <a href="javascript:void(0);" id="toggle-link" onclick="toggleAuthMode()">没有账户?点此注册</a>
+    </div>
+</div>
+
+<script>
+    let isLogin = true;  // 初始模式为登录
+    function toggleAuthMode() {
+        const form = document.getElementById('auth-form');
+        const title = document.getElementById('auth-title');
+        const submitBtn = document.getElementById('submit-btn');
+        const toggleLink = document.getElementById('toggle-link');
+
+        if (isLogin) {
+            // 切换到注册模式
+            title.textContent = "注册";
+            submitBtn.textContent = "注册";
+            toggleLink.textContent = "已经有账户?点此登录";
+
+        } else {
+            // 切换到登录模式
+            title.textContent = "登录";
+            submitBtn.textContent = "登录";
+            toggleLink.textContent = "没有账户?点此注册";
+
+        }
+
+        // 切换模式
+        isLogin = !isLogin;
+    }
+
+    // 提交表单的逻辑
+    document.getElementById('auth-form').addEventListener('submit', function (e) {
+        e.preventDefault();  // 防止表单自动提交
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        if (isLogin) {
+            // 在这里处理登录请求，包含2FA
+            fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                }),
+            }).then(response => {
+                if (response.ok) {
+                    window.location.href = '/';  // 登录成功后跳转到主页
+                } else {
+                    return response.text().then(text => JSON.parse(text)).then(data => {
+                        alert(data.error);
+                    });
+                }
+            });
+        } else {
+            // 在这里处理注册请求
+            fetch('/api/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                }),
+            }).then(response => {
+                if (response.ok) {
+                    window.location.href = '/login';  // 注册成功后跳转到登录页面
+                } else {
+                    return response.text().then(text => JSON.parse(text)).then(data => {
+                        alert(data.error);
+                    });
+                }
+            });
+        }
+    });
+</script>
+
+</body>
+</html>

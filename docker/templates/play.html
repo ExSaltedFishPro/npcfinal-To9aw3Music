@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>丰川音乐 - 正在播放 {{item['name']}}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .delivery-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+        .delivery-container h2 {
+            text-align: center;
+        }
+        .product-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .product-info img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+        .product-info .product-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        .delivery-info {
+            margin-top: 20px;
+            font-size: 16px;
+            text-align: center;
+        }
+        .delivery-info p {
+            margin: 10px 0;
+        }
+        .activation-code {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 5px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button {
+            width: 100%;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+
+<div class="delivery-container">
+    <h2>播放</h2>
+
+
+    <div class="product-info">
+        <img src="/static/{{item['id']}}.jpg" alt="Game Image">
+        <div>
+            <p class="product-name">{{item['name']}}</p>
+        </div>
+    </div>
+    <button class="button" onclick="play()">跳转至网易云</button>
+    <!-- <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id={{item['music']}}&auto=1&height=66"></iframe>-->
+    <button class="button" onclick="goBack()">返回主页</button>
+</div>
+
+<script>
+    function goBack() {
+        window.location.href = '/';
+    }
+    function play() {
+        window.location.href = "http://music.163.com/outchain/player?type=2&id={{item['music']}}&auto=1&height=66";
+    }
+</script>
+
+</body>
+</html>
